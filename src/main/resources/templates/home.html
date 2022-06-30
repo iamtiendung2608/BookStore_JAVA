@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html   xmlns:th="http://www.thymeleaf.org"
+        lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/slice.css}">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<div class="container bootdey">
+    <div  class="col-md-3">
+        <section class="panel">
+            <div class="panel-body">
+                <form action="" method="post" th:action="@{/}">
+                    <input  id="searchText" name="name" type="text" placeholder="Keyword Search" class="form-control" />
+                </form>
+            </div>
+        </section>
+        <section  class="panel">
+            <header class="panel-heading">
+                Category
+            </header>
+            <div th:each="tag : ${tags}" class="panel-body">
+                <ul class="nav prod-cat">
+                    <li>
+                        <a sec:authorize="hasAuthority('CUSTOMER') || !isAuthenticated()" th:href="@{/tag/{id}(id = ${tag.id})}" th:text="${tag.name}" href=""></a>
+                        <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/tag/update/{id}(id = ${tag.id})}" th:text="${tag.name}" href=""></a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section class="panel">
+            <header class="panel-heading">
+                Best Seller
+            </header>
+            <div class="panel-body">
+                <div class="best-seller">
+                    <article class="media">
+                        <a class="pull-left thumb p-thumb">
+                            <img th:src="@{/image/pic1.png}"/>
+                        </a>
+                        <div class="media-body">
+                            <a href="#" class="p-head">Item One Tittle</a>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="col-md-9">
+        <section class="panel">
+            <div class="panel-body">
+                <div class="pull-left">
+                    <ul class="pagination">
+                        <li><a th:href="@{/}"><i class="fa fa-home" aria-hidden="true"></i></a></li>
+                    </ul>
+                </div>
+                <div class="pull-right">
+                    <ul  class="pagination">
+<!--                        admin feature-->
+                        <li sec:authorize="hasAuthority('ADMIN')"><a  th:href="@{/book/add}"><i class="fa fa-book" aria-hidden="true"> Add book</i></a></li>
+                        <li sec:authorize="hasAuthority('ADMIN')"><a  th:href="@{/tag/add}"><i class="fa fa-bookmark" aria-hidden="true"> Add tag</i></a></li>
+<!--                        user feature-->
+                        <li sec:authorize="hasAuthority('CUSTOMER')"><a th:href="@{/cart}"><i class="fa fa-shopping-cart" aria-hidden="true"> Cart</i></a></li>
+                        <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}"><i class="fa fa-sign-out" aria-hidden="true"> Logout</i></a></li>
+                        <!--                        Logged in user-->
+                        <li sec:authorize="!isAuthenticated()"><a th:href="@{/login}"><i class="fa fa-sign-in" aria-hidden="true"> Login</i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section class="panel">
+            <div class="accordian">
+                <ul>
+                    <li>
+                        <a href="#">
+                            <img th:src="@{/image/pic2.png}"/>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img th:src="@{/image/pic3.png}"/>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img th:src="@{/image/pic4.png}"/>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img th:src="@{/image/pic1.png}"/>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img th:src="@{/image/pic5.png}"/>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <!-- product - list -->
+        <div  id="listProduct" class="row product-list" >
+            <div th:each="book : ${books}" class="col-md-4">
+                <section class="panel">
+                    <div class="pro-img-box">
+                        <img th:src="${book.image}" alt=""/>
+                        <a th:href="@{/add/{id}(id=${book.id})}" sec:authorize="hasAuthority('CUSTOMER')" class="adtocart">
+                            <i class="fa fa-shopping-cart"></i>
+                        </a>
+                        <a th:href="@{/book/update/{id}(id=${book.id})}" sec:authorize="hasAuthority('ADMIN')" class="adtocart">
+                            <i class="fa fa-ellipsis-h"></i>
+                        </a>
+                    </div>
+                    <div class="panel-body text-center">
+                        <h4>
+                            <a  th:text="${book.name}" style="text-decoration: none;" th:href="@{/product/{id}(id=${book.id})}" class="pro-title">
+                            </a>
+                        </h4>
+                        <p th:text="${#numbers.formatDecimal(book.price, 3, 'POINT', 0, 'POINT')} + ' vnd'" style="font-size:2em" class="price"></p>
+                    </div>
+                </section>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+</body>
+</html>

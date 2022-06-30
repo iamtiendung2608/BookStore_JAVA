@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html   xmlns:th="https://www.thymeleaf.org"
+        lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Tag</title>
+</head>
+<style>
+    span{
+        color:red;
+    }
+</style>
+<body>
+<form action="" method="post" th:action="@{/tag/add}" th:object="${tag}">
+    <input type="hidden" name="id" th:value="${tag.id}" th:fields="${tag.id}">
+    <label for="name">Name: </label>
+        <input  type="text" name="name"  th:field="${tag.name}">
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+
+    <br>    <br>
+
+    <label for="topic">Topic: </label>
+    <textarea cols="50" rows="4" type="text" name="topic"  th:field="${tag.topic}"></textarea>
+    <span th:if="${#fields.hasErrors('topic')}" th:errors="*{topic}"></span>
+
+    <br>    <br>
+    <input type="submit" value="Submit!"> <a th:text="${tag.id != 0} ? 'Delete this tag? '" th:href="@{/tag/delete/{id}(id=${tag.id})}"></a>
+</form>
+
+</body>
+</html>

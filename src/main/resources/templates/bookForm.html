@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html   xmlns:th="https://thymeleaf.org"
+        lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book</title>
+</head>
+<style>
+    span{
+        color:red;
+    }
+</style>
+<body>
+<form action="" method="post" th:action="@{/book/add}" th:object="${book}">
+
+    <input type="hidden" name="id" th:value="${book.id}" th:fields="${book.id}">
+
+    <label for="name">Name: </label>
+    <input type="text" name="name"  th:field="${book.name}">
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+
+    <br>    <br>
+
+
+    <label for="price">Price: </label>
+    <input type="number" name="price"  th:field="${book.price}">
+    <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+
+    <br>    <br>
+
+
+
+    <label for="author">Author: </label>
+    <input type="text" name="author"  th:field="${book.author}">
+    <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>
+    <br>
+    <br>
+
+
+
+    <label for="image">Image: </label>
+    <textarea rows="4" cols="50" type="text" name="image" size="70"  th:field="${book.image}"></textarea>
+    <span th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></span>
+
+    <br>    <br>
+
+
+
+    <label for="describe">Describe: </label>
+    <textarea rows="4" cols="50" type="text" name="describe" size="70"  th:field="${book.describe}"></textarea>
+    <span th:if="${#fields.hasErrors('describe')}" th:errors="*{describe}"></span>
+    <br>    <br>
+
+
+    <label for="content">Tag: </label>
+    <select  th:field="${book.tag}">
+      <div th:each="tag : ${tags}">
+          <option th:text="${tag.name}" th:value="${tag.id}"></option>
+      </div>
+    </select>    <br>    <br>
+
+    <input type="submit" value="Submit">
+    <a th:text="${book.id != 0} ? 'Delete this book?' " th:href="@{/book/delete/{id}(id=${book.id})}"></a>
+</form>
+</body>
+</html>
