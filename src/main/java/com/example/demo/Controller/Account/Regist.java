@@ -1,7 +1,10 @@
 package com.example.demo.Controller.Account;
 
+import com.example.demo.Exception.PasswordMissMatchException;
+import com.example.demo.Exception.UserAlreadyExist;
 import com.example.demo.Security.Account;
 import com.example.demo.Security.AccountRepo;
+import com.example.demo.Security.AccountService;
 import com.example.demo.Security.Role;
 import com.example.demo.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +24,8 @@ import javax.validation.Valid;
 
 @Controller
 public class Regist {
-    private AccountRepo accountRepo;
-    private PasswordEncoder passwordEncoder;
-
-    public Regist(AccountRepo accountRepo, PasswordEncoder passwordEncoder) {
-        this.accountRepo = accountRepo;
-        this.passwordEncoder = passwordEncoder;
-    }
-
+    @Autowired
+    private AccountService accountService;
     @RequestMapping("/regist")
     private String registPage(Model model){
         model.addAttribute("user",new UserService());
@@ -39,12 +36,20 @@ public class Regist {
         if(br.hasErrors()){
             return "regist";
         }
-        accountRepo.save(user.toUSer(passwordEncoder));
+        try{
+            accountService.registUser(user);
+        }
+        catch (UserAlreadyExist e){
+            model.addAttribute("user", user);
+            br.rejectValue("username","user.username",e.getMessage());
+            return "regist";
+        }
+        catch (PasswordMissMatchException e){
+            model.addAttribute("user", user);
+            br.rejectValue("password","user.password",e.getMessage());
+            return "regist";
+        }
         return "redirect:/login";
     }
-    @PostConstruct
-    private void addUser(){
-        accountRepo.save(new Account("tiendung",passwordEncoder.encode("123"),20,"male","0889047937", Role.ADMIN));
-        accountRepo.save(new Account("user",passwordEncoder.encode("123"),20,"male","0889047937", Role.CUSTOMER));
-    }
+
 }

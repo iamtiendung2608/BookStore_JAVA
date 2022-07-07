@@ -9,6 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @Entity
@@ -29,6 +31,8 @@ public class Book {
     private String image;
     @Size(min = 1,message = "Book describe mustn't be null")
     private String describe;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private Tag tag;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book", orphanRemoval = true)
+    private List<Order>orders = new ArrayList<>();
 }

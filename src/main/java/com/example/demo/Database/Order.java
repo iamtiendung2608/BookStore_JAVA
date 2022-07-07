@@ -14,14 +14,13 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private Account account;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private Book book;
 
     private int quantity;
-
 
     public Order(Account account, Book book) {
         this.account = account;
